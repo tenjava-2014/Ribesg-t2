@@ -15,7 +15,7 @@ import java.nio.file.StandardOpenOption;
 /**
  * The plugin's configuration.
  */
-public class CyberConfig {
+public class Config {
 
 	/**
 	 * Charset used to write configuration.
@@ -38,13 +38,13 @@ public class CyberConfig {
 	private long initialPower;
 
 	/**
-	 * Builds a CyberConfig.
+	 * Builds a Config.
 	 *
 	 * @param plugin the plugin
 	 */
-	public CyberConfig(final CyberCraft plugin) {
+	public Config(final CyberCraft plugin) {
 		this.configPath = Paths.get(plugin.getDataFolder().getAbsolutePath(), "config.yml");
-		this.initialPower = CyberConfig.DEFAULT_INITIAL_POWER;
+		this.initialPower = Config.DEFAULT_INITIAL_POWER;
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class CyberConfig {
 	 * @param config the loaded configuration
 	 */
 	private void read(final YamlConfiguration config) {
-		this.initialPower = config.getLong("initialPower", CyberConfig.DEFAULT_INITIAL_POWER);
+		this.initialPower = config.getLong("initialPower", Config.DEFAULT_INITIAL_POWER);
 	}
 
 	/**

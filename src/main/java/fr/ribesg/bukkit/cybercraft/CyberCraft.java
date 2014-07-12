@@ -4,7 +4,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class CyberCraft extends JavaPlugin {
 
-	private CyberConfig config;
+	private Config config;
 
 	@Override
 	public void onDisable() {
@@ -13,11 +13,11 @@ public class CyberCraft extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		this.config = new CyberConfig(this);
+		this.config = new Config(this);
 		this.config.load();
 	}
 
-	public CyberConfig getPluginConfig() {
+	public Config getPluginConfig() {
 		return config;
 	}
 }
