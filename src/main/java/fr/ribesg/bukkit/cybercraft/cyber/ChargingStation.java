@@ -1,4 +1,5 @@
-package fr.ribesg.bukkit.cybercraft;
+package fr.ribesg.bukkit.cybercraft.cyber;
+import fr.ribesg.bukkit.cybercraft.util.BlockLocation;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -31,17 +32,17 @@ public class ChargingStation {
 	/**
 	 * The Charging Station's base Location
 	 */
-	private final Location baseLocation;
+	private final BlockLocation baseLocation;
 
 	/**
 	 * The Charging Station's top Location
 	 */
-	private final Location topLocation;
+	private final BlockLocation topLocation;
 
 	/**
 	 * This Charging Station's power level
 	 */
-	private long powerLevel;
+	private double powerLevel;
 
 	/**
 	 * Builds a Charging Station from its base Location.
@@ -52,9 +53,9 @@ public class ChargingStation {
 		if (!ChargingStation.isValid(baseLocation)) {
 			throw new IllegalArgumentException("Invalid Charging Station at " + baseLocation.toString());
 		}
-		this.baseLocation = baseLocation;
-		this.topLocation = baseLocation.add(0, 2, 0);
-		this.powerLevel = 0;
+		this.baseLocation = new BlockLocation(baseLocation);
+		this.topLocation = new BlockLocation(baseLocation.add(0, 2, 0));
+		this.powerLevel = 0d;
 	}
 
 	/**
@@ -62,7 +63,7 @@ public class ChargingStation {
 	 *
 	 * @return the power level available in this Charging Station
 	 */
-	public long getPowerLevel() {
+	public double getPowerLevel() {
 		return this.powerLevel;
 	}
 
@@ -77,9 +78,12 @@ public class ChargingStation {
 	 * Charges a CyberPlayer with this Charging Station.
 	 *
 	 * @param player the CyberPlayer to charge
+	 *
+	 * @return true if this Charging Station charged the CyberPlayer, false
+	 * otherwise
 	 */
-	public void charge(final CyberPlayer player) {
-		// TODO
+	public boolean charge(final CyberPlayer player) {
+		return false; // TODO
 	}
 
 	/**
@@ -87,8 +91,8 @@ public class ChargingStation {
 	 *
 	 * @return the Charging Station's base Location
 	 */
-	public Location getBaseLocation() {
-		return baseLocation;
+	public BlockLocation getBaseLocation() {
+		return this.baseLocation;
 	}
 
 	/**
@@ -96,7 +100,7 @@ public class ChargingStation {
 	 *
 	 * @return the Charging Station's top Location
 	 */
-	public Location getTopLocation() {
-		return topLocation;
+	public BlockLocation getTopLocation() {
+		return this.topLocation;
 	}
 }
