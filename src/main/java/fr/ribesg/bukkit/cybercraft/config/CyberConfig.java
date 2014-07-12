@@ -81,8 +81,8 @@ public class CyberConfig {
 		DEFAULT_FUEL_POWER = new EnumMap<>(Material.class);
 		DEFAULT_FUEL_POWER.put(Material.COAL, 100D);
 		DEFAULT_FUEL_POWER.put(Material.COAL_BLOCK, 1_000D);
-		DEFAULT_FUEL_POWER.put(Material.DIAMOND, 50_000D);
-		DEFAULT_FUEL_POWER.put(Material.DIAMOND_BLOCK, 450_000D);
+		DEFAULT_FUEL_POWER.put(Material.DIAMOND, 10_000D);
+		DEFAULT_FUEL_POWER.put(Material.DIAMOND_BLOCK, 100_000D);
 	}
 
 	/**
