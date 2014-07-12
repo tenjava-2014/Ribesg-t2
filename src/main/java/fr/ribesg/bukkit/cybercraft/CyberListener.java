@@ -7,12 +7,14 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Dispenser;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -111,5 +113,12 @@ public class CyberListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onFoodLevelChange(final FoodLevelChangeEvent event) {
 		event.setCancelled(true);
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public void onPlayerRegainHealth(final EntityRegainHealthEvent event) {
+		if (event.getEntityType() == EntityType.PLAYER) {
+			event.setCancelled(true);
+		}
 	}
 }
