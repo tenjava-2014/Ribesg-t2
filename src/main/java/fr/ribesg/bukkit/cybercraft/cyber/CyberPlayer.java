@@ -111,8 +111,8 @@ public class CyberPlayer {
 			final Player player = Bukkit.getPlayer(this.playerId);
 			if (player.getFoodLevel() > 0) {
 				player.setFoodLevel(player.getFoodLevel() - 1);
-			} else {
-				player.setHealth(player.getHealth() - (player.getMaxHealth() / 20D));
+			} else if (player.getHealth() > 0) {
+				player.setHealth(Math.max(0, player.getHealth() - (player.getMaxHealth() / 20D)));
 			}
 		}
 	}
