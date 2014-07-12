@@ -8,3 +8,7 @@ commands:
     permission: cybercraft.admin
     usage: |
       /<command> [name,...] [...] <value>
+  perk:
+    description: Enable/Disable a Perk
+    usage: |
+      /<command> <perkName> <enable|disable>

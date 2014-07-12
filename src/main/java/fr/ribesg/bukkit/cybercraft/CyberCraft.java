@@ -26,6 +26,7 @@ public class CyberCraft extends JavaPlugin {
 
 	private CyberConfig config;
 	private CyberDb     db;
+	private CyberPerks  perks;
 
 	private Map<UUID, CyberPlayer>              players;
 	private Map<BlockLocation, ChargingStation> stations;
@@ -55,6 +56,8 @@ public class CyberCraft extends JavaPlugin {
 
 		this.players = new HashMap<>();
 		this.stations = new HashMap<>();
+
+		this.perks = new CyberPerks(this);
 
 		this.adminScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 
@@ -134,6 +137,10 @@ public class CyberCraft extends JavaPlugin {
 
 	public Map<BlockLocation, ChargingStation> getStations() {
 		return stations;
+	}
+
+	public CyberPerks getPerks() {
+		return perks;
 	}
 
 	public Scoreboard getAdminScoreboard() {

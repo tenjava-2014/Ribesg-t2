@@ -55,6 +55,69 @@ public class CyberConfig extends AbstractConfig {
 	 */
 	private long chargingInterval;
 
+	/**
+	 * Default value for {@link #attackPerkCost}
+	 */
+	private static final double DEFAULT_ATTACK_PERK_COST = 15D;
+
+	/**
+	 * Cost of the Attach perk
+	 */
+	private double attackPerkCost;
+
+	/**
+	 * Default value for {@link #attackPerkMultiplier}
+	 */
+	private static final double DEFAULT_ATTACK_PERK_MULITPLIER = 2D;
+
+	/**
+	 * Damage multiplier of the Attack perk
+	 */
+	private double attackPerkMultiplier;
+
+	/**
+	 * Default value for {@link #defensePerkCost}
+	 */
+	private static final double DEFAULT_DEFENSE_PERK_COST = 10D;
+
+	/**
+	 * Cost of the Defense perk
+	 */
+	private double defensePerkCost;
+
+	/**
+	 * Default value for {@link #defensePerkMultiplier}
+	 */
+	private static final double DEFAULT_DEFENSE_PERK_MULTIPLIER = 0.5D;
+
+	/**
+	 * Damage multiplier of the Defense perk
+	 */
+	private double defensePerkMultiplier;
+
+	/**
+	 * Default value for {@link #flyPerkCost}
+	 */
+	private static final double DEFAULT_FLY_PERK_COST = 5D;
+
+	/**
+	 * Cost of the Fly perk
+	 */
+	private double flyPerkCost;
+
+	/**
+	 * Default value for {@link #flyPerkInterval}
+	 */
+	private static final long DEFAULT_FLY_PERK_INTERVAL = 20L;
+
+	/**
+	 * Interval between ech discharge caused by the Fly perk
+	 */
+	private long flyPerkInterval;
+
+	/**
+	 * Default value for {@link #fuelPower}
+	 */
 	private static final EnumMap<Material, Double> DEFAULT_FUEL_POWER;
 
 	static {
@@ -81,6 +144,12 @@ public class CyberConfig extends AbstractConfig {
 		this.naturalDecay = CyberConfig.DEFAULT_NATURAL_DECAY;
 		this.naturalDecayInterval = CyberConfig.DEFAULT_NATURAL_DECAY_INTERVAL;
 		this.chargingInterval = CyberConfig.DEFAULT_CHARGING_INTERVAL;
+		this.attackPerkCost = CyberConfig.DEFAULT_ATTACK_PERK_COST;
+		this.attackPerkMultiplier = CyberConfig.DEFAULT_ATTACK_PERK_MULITPLIER;
+		this.defensePerkCost = CyberConfig.DEFAULT_DEFENSE_PERK_COST;
+		this.defensePerkMultiplier = CyberConfig.DEFAULT_DEFENSE_PERK_MULTIPLIER;
+		this.flyPerkCost = CyberConfig.DEFAULT_FLY_PERK_COST;
+		this.flyPerkInterval = CyberConfig.DEFAULT_FLY_PERK_INTERVAL;
 		this.fuelPower = new EnumMap<>(CyberConfig.DEFAULT_FUEL_POWER);
 	}
 
@@ -123,6 +192,60 @@ public class CyberConfig extends AbstractConfig {
 	}
 
 	/**
+	 * Gets the cost of the Attach perk.
+	 *
+	 * @return the cost of the Attach perk
+	 */
+	public double getAttackPerkCost() {
+		return attackPerkCost;
+	}
+
+	/**
+	 * Gets the damage multiplier of the Attack perk.
+	 *
+	 * @return the damage multiplier of the Attack perk
+	 */
+	public double getAttackPerkMultiplier() {
+		return attackPerkMultiplier;
+	}
+
+	/**
+	 * Gets the cost of the Defense perk.
+	 *
+	 * @return the cost of the Defense perk
+	 */
+	public double getDefensePerkCost() {
+		return defensePerkCost;
+	}
+
+	/**
+	 * Gets the damage multiplier of the Defense perk.
+	 *
+	 * @return the damage multiplier of the Defense perk
+	 */
+	public double getDefensePerkMultiplier() {
+		return defensePerkMultiplier;
+	}
+
+	/**
+	 * Gets the cost of the Fly perk.
+	 *
+	 * @return the cost of the Fly perk
+	 */
+	public double getFlyPerkCost() {
+		return flyPerkCost;
+	}
+
+	/**
+	 * Gets the interval between ech discharge caused by the Fly perk.
+	 *
+	 * @return the interval between ech discharge caused by the Fly perk
+	 */
+	public long getFlyPerkInterval() {
+		return flyPerkInterval;
+	}
+
+	/**
 	 * Gets map of fuel power provided by fuel materials.
 	 *
 	 * @return the map of fuel power provided by fuel materials
@@ -142,6 +265,12 @@ public class CyberConfig extends AbstractConfig {
 		this.naturalDecay = config.getDouble("naturalDecay", CyberConfig.DEFAULT_NATURAL_DECAY);
 		this.naturalDecayInterval = config.getLong("naturalDecayInterval", CyberConfig.DEFAULT_NATURAL_DECAY_INTERVAL);
 		this.chargingInterval = config.getLong("chargingInterval", CyberConfig.DEFAULT_CHARGING_INTERVAL);
+		this.attackPerkCost = config.getDouble("attackPerkCost", CyberConfig.DEFAULT_ATTACK_PERK_COST);
+		this.attackPerkMultiplier = config.getDouble("attackPerkMultiplier", CyberConfig.DEFAULT_ATTACK_PERK_MULITPLIER);
+		this.defensePerkCost = config.getDouble("defensePerkCost", CyberConfig.DEFAULT_DEFENSE_PERK_COST);
+		this.defensePerkMultiplier = config.getDouble("defensePerkMultiplier", CyberConfig.DEFAULT_DEFENSE_PERK_MULTIPLIER);
+		this.flyPerkCost = config.getDouble("flyPerkCost", CyberConfig.DEFAULT_FLY_PERK_COST);
+		this.flyPerkInterval = config.getLong("flyPerkInterval", CyberConfig.DEFAULT_FLY_PERK_INTERVAL);
 		if (config.isConfigurationSection("fuelPower")) {
 			this.fuelPower.clear();
 			final ConfigurationSection fuelPowerSection = config.getConfigurationSection("fuelPower");
@@ -165,10 +294,29 @@ public class CyberConfig extends AbstractConfig {
 	protected String write() {
 		// TODO Documented configuration
 		final StringBuilder builder = new StringBuilder();
+		builder.append("# Initial power given to first joining players and respawning players\n");
 		builder.append("initialPower: ").append(this.initialPower).append("\n\n");
+
+		builder.append("# Amount of power naturally loss and interval between losses\n");
 		builder.append("naturalDecay: ").append(this.naturalDecay).append('\n');
 		builder.append("naturalDecayInterval: ").append(this.naturalDecayInterval).append("\n\n");
+
+		builder.append("# Interval between charges when on a Charging Station\n");
 		builder.append("chargingInterval: ").append(this.chargingInterval).append("\n\n");
+
+		builder.append("# Cost and damage multiplier of the Attack perk\n");
+		builder.append("attackPerkCost: ").append(this.attackPerkCost).append('\n');
+		builder.append("attackPerkMultiplier: ").append(this.attackPerkMultiplier).append("\n\n");
+
+		builder.append("# Cost and damage multiplier of the Defense perk\n");
+		builder.append("defensePerkCost: ").append(this.defensePerkCost).append('\n');
+		builder.append("defensePerkMultiplier: ").append(this.defensePerkMultiplier).append("\n\n");
+
+		builder.append("# Cost and discharge interval of the Fly perk\n");
+		builder.append("flyPerkCost: ").append(this.flyPerkCost).append('\n');
+		builder.append("flyPerkInterval: ").append(this.flyPerkInterval).append("\n\n");
+
+		builder.append("# Fuel definition. You need to use Bukkit Material enum values here.\n");
 		builder.append("fuelPower:\n");
 		for (final Map.Entry<Material, Double> e : this.fuelPower.entrySet()) {
 			builder.append("  ").append(e.getKey().toString()).append(": ").append(e.getValue().toString()).append('\n');
