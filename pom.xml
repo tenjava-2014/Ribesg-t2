@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.tenjava.entries.Ribesg.t2</groupId> <!-- you're welcome to change this -->
-	<artifactId>Ribesg-t2</artifactId>
+	<groupId>fr.ribesg.bukkit.cybercraft</groupId>
+	<artifactId>Cybercraft</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ten.java 2014 July</name>
-	<description>Contest entry for ten.java 2014 July</description>
+	<name>Cybercraft</name>
+	<description>Ribesg's Contest entry for ten.java 2014 July</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,7 +22,7 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>1.7.9-R0.2-SNAPSHOT</version>
+			<version>1.7.9-R0.2</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
@@ -36,10 +36,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
 				<configuration>
-					<!-- Per the rules at http://git.io/lAJgzQ, you're free to change
-					     "1.6" to "1.7" or "1.8" if you wish. This will not impact your score. -->
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -52,15 +50,6 @@
 					<include>*</include>
 				</includes>
 			</resource>
-			<!-- Uncomment to include files (example is LICENSE file) from the project root
-			<resource>
-				<targetPath>.</targetPath>
-				<directory>${basedir}</directory>
-				<includes>
-					<include>LICENSE</include>
-				</includes>
-			</resource>
-			-->
 		</resources>
 	</build>
 </project>
