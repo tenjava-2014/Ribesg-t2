@@ -20,7 +20,7 @@ public class ChargingStation {
 	 */
 	public static boolean isValid(final Location baseLocation) {
 		final Block baseBlock = baseLocation.getBlock();
-		final Block topBlock = baseLocation.add(0, 2, 0).getBlock();
+		final Block topBlock = baseLocation.add(0, 3, 0).getBlock();
 		return baseBlock.getType() == Material.DISPENSER &&
 		       ((Dispenser) baseBlock.getState().getData()).getFacing() == BlockFace.UP &&
 		       topBlock.getType() == Material.DISPENSER &&
@@ -54,7 +54,7 @@ public class ChargingStation {
 			throw new IllegalArgumentException("Invalid Charging Station at " + baseLocation.toString());
 		}
 		this.baseLocation = new BlockLocation(baseLocation);
-		this.topLocation = new BlockLocation(baseLocation.add(0, 2, 0));
+		this.topLocation = new BlockLocation(baseLocation.add(0, 3, 0));
 		this.powerLevel = 0d;
 	}
 

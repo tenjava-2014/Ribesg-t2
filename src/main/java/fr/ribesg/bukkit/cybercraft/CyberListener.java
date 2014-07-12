@@ -48,8 +48,8 @@ public class CyberListener implements Listener {
 			final Location loc = block.getLocation();
 			if (ChargingStation.isValid(loc)) {
 				this.plugin.createChargingStation(loc);
-			} else if (ChargingStation.isValid(loc.subtract(0, 2, 0))) {
-				this.plugin.createChargingStation(loc.subtract(0, 2, 0));
+			} else if (ChargingStation.isValid(loc.subtract(0, 3, 0))) {
+				this.plugin.createChargingStation(loc.subtract(0, 3, 0));
 			}
 		}
 	}
