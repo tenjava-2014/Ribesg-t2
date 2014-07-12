@@ -92,6 +92,15 @@ public class ChargingStation {
 	}
 
 	/**
+	 * Builds a Charging Station from its base BlockLocation.
+	 *
+	 * @param baseLocation the base BlockLocation of the Charging Station
+	 */
+	public ChargingStation(final CyberCraft instance, final BlockLocation baseLocation) {
+		this(instance, baseLocation.toBukkit());
+	}
+
+	/**
 	 * Updates the power level of this Charging Station base on its dispensers content.
 	 */
 	public void updatePowerLevel() {
@@ -171,20 +180,17 @@ public class ChargingStation {
 	 * Updates the signs attached to this Charging Station.
 	 */
 	public void updateSigns() {
-		System.out.println("Updating " + this.attachedSigns.size() + " signs");
 		final Iterator<BlockLocation> it = this.attachedSigns.iterator();
 		while (it.hasNext()) {
 			final BlockLocation loc = it.next();
 			final Block b = Bukkit.getWorld(loc.getWorldName()).getBlockAt(loc.getX(), loc.getY(), loc.getZ());
 			if (b.getType() != Material.SIGN_POST && b.getType() != Material.WALL_SIGN) {
 				it.remove();
-				System.out.println("Removed a sign");
 			} else {
 				final Sign sign = (Sign) b.getState();
 				sign.setLine(0, "" + ChatColor.BLACK + '[' + ChatColor.GREEN + "Power" + ChatColor.BLACK + ']');
 				sign.setLine(2, FORMAT.format((int) this.powerLevel));
 				sign.update(true);
-				System.out.println("Updated a sign");
 			}
 		}
 	}

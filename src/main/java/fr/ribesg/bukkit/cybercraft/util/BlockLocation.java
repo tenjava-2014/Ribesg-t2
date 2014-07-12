@@ -5,6 +5,19 @@ import org.bukkit.Location;
 
 public final class BlockLocation {
 
+	public static BlockLocation fromString(final String stringLocation) {
+		final String[] split = stringLocation.split(";");
+		if (split.length != 4) {
+			throw new IllegalArgumentException("Malformed BlockLocation: " + stringLocation);
+		} else {
+			try {
+				return new BlockLocation(split[0], Integer.parseInt(split[1]), Integer.parseInt(split[2]), Integer.parseInt(split[3]));
+			} catch (final NumberFormatException e) {
+				throw new IllegalArgumentException("Malformed BlockLocation: " + stringLocation);
+			}
+		}
+	}
+
 	private final String worldName;
 	private final int    x, y, z;
 
@@ -73,5 +86,10 @@ public final class BlockLocation {
 		result = 31 * result + this.y;
 		result = 31 * result + this.z;
 		return result;
+	}
+
+	@Override
+	public String toString() {
+		return this.worldName + ";" + this.x + ";" + this.y + ";" + this.z;
 	}
 }

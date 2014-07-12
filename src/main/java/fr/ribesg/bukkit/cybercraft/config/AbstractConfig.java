@@ -101,8 +101,10 @@ public abstract class AbstractConfig {
 	private void checkFile() {
 		if (!Files.exists(this.configPath)) {
 			try {
-				if (!this.configPath.toFile().getParentFile().mkdirs()) {
-					throw new IllegalStateException("Unable to create configuration file!");
+				if (!Files.exists(this.configPath.toFile().getParentFile().toPath())) {
+					if (!this.configPath.toFile().getParentFile().mkdirs()) {
+						throw new IllegalStateException("Unable to create configuration file!");
+					}
 				}
 				Files.createFile(this.configPath);
 			} catch (final Throwable e) {

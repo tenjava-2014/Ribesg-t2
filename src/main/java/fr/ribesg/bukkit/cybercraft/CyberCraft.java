@@ -1,6 +1,7 @@
 package fr.ribesg.bukkit.cybercraft;
 
 import fr.ribesg.bukkit.cybercraft.config.CyberConfig;
+import fr.ribesg.bukkit.cybercraft.config.CyberDb;
 import fr.ribesg.bukkit.cybercraft.cyber.ChargingStation;
 import fr.ribesg.bukkit.cybercraft.cyber.CyberPlayer;
 import fr.ribesg.bukkit.cybercraft.task.AdminScoreboardUpdateTask;
@@ -24,11 +25,7 @@ public class CyberCraft extends JavaPlugin {
 	public static final String POWER_OBJECTIVE = "Power";
 
 	private CyberConfig config;
-
-	private CyberListener             listener;
-	private DecayTask                 decayTask;
-	private ChargingTask              chargingTask;
-	private AdminScoreboardUpdateTask adminScoreboardUpdateTask;
+	private CyberDb     db;
 
 	private Map<UUID, CyberPlayer>              players;
 	private Map<BlockLocation, ChargingStation> stations;
@@ -41,7 +38,7 @@ public class CyberCraft extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		// TODO Something, maybe. I don't know.
+		this.db.save();
 	}
 
 	@Override
@@ -49,10 +46,11 @@ public class CyberCraft extends JavaPlugin {
 		this.config = new CyberConfig(this);
 		this.config.load();
 
-		this.listener = new CyberListener(this);
-		this.decayTask = new DecayTask(this);
-		this.chargingTask = new ChargingTask(this);
-		this.adminScoreboardUpdateTask = new AdminScoreboardUpdateTask(this);
+		// We don't need to store instances
+		new CyberListener(this);
+		new DecayTask(this);
+		new ChargingTask(this);
+		new AdminScoreboardUpdateTask(this);
 
 		this.players = new HashMap<>();
 		this.stations = new HashMap<>();
@@ -61,6 +59,9 @@ public class CyberCraft extends JavaPlugin {
 
 		final Objective powerObj = this.adminScoreboard.registerNewObjective(POWER_OBJECTIVE, "dummy");
 		powerObj.setDisplaySlot(DisplaySlot.SIDEBAR);
+
+		this.db = new CyberDb(this);
+		this.db.load();
 	}
 
 	// ########################### //
