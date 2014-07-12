@@ -18,7 +18,7 @@ public class AdminScoreboardUpdateTask extends BukkitRunnable {
 	}
 
 	public void start() {
-		this.runTaskTimer(this.plugin, 20L, 20L);
+		this.runTaskTimer(this.plugin, 10L, 10L);
 	}
 
 	@Override
