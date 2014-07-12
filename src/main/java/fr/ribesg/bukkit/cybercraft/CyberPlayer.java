@@ -9,17 +9,17 @@ import java.util.UUID;
 public class CyberPlayer {
 
 	/**
-	 * Player's UUID
+	 * CyberPlayer's UUID
 	 */
 	private final UUID playerId;
 
 	/**
-	 * Player's last known name
+	 * CyberPlayer's last known name
 	 */
 	private final String playerName;
 
 	/**
-	 * Player's power
+	 * CyberPlayer's power
 	 */
 	private long power;
 
@@ -47,7 +47,7 @@ public class CyberPlayer {
 	}
 
 	/**
-	 * Recharge this CyberPlayer.
+	 * Recharges this CyberPlayer.
 	 *
 	 * @param amount the amount of power to add
 	 */
@@ -56,7 +56,7 @@ public class CyberPlayer {
 	}
 
 	/**
-	 * Discharge this CyberPlayer.
+	 * Discharges this CyberPlayer.
 	 *
 	 * @param amount the amount of power to remove
 	 */
@@ -69,7 +69,7 @@ public class CyberPlayer {
 	}
 
 	/**
-	 * Called when the Player no longer has power. Handles mostly-inevitable death.
+	 * Handles mostly-inevitable death. Called when the Player no longer has power.
 	 */
 	public void noMorePower() {
 		// TODO Handle Player slow death
