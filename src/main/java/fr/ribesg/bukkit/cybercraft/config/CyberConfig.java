@@ -1,5 +1,7 @@
 package fr.ribesg.bukkit.cybercraft.config;
 import fr.ribesg.bukkit.cybercraft.CyberCraft;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -12,11 +14,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * The plugin's configuration.
  */
 public class CyberConfig {
+
+	private static final Logger LOG = Logger.getLogger(CyberConfig.class.getName());
 
 	/**
 	 * Charset used to write configuration.
@@ -68,6 +75,21 @@ public class CyberConfig {
 	 */
 	private long chargingInterval;
 
+	private static final EnumMap<Material, Double> DEFAULT_FUEL_POWER;
+
+	static {
+		DEFAULT_FUEL_POWER = new EnumMap<>(Material.class);
+		DEFAULT_FUEL_POWER.put(Material.COAL, 100D);
+		DEFAULT_FUEL_POWER.put(Material.COAL_BLOCK, 1_000D);
+		DEFAULT_FUEL_POWER.put(Material.DIAMOND, 50_000D);
+		DEFAULT_FUEL_POWER.put(Material.DIAMOND_BLOCK, 450_000D);
+	}
+
+	/**
+	 * Map of fuel power provided by fuel materials
+	 */
+	private EnumMap<Material, Double> fuelPower;
+
 	/**
 	 * Builds a CyberConfig.
 	 *
@@ -79,6 +101,7 @@ public class CyberConfig {
 		this.naturalDecay = CyberConfig.DEFAULT_NATURAL_DECAY;
 		this.naturalDecayInterval = CyberConfig.DEFAULT_NATURAL_DECAY_INTERVAL;
 		this.chargingInterval = CyberConfig.DEFAULT_CHARGING_INTERVAL;
+		this.fuelPower = new EnumMap<>(CyberConfig.DEFAULT_FUEL_POWER);
 	}
 
 	/**
@@ -120,6 +143,15 @@ public class CyberConfig {
 	}
 
 	/**
+	 * Gets map of fuel power provided by fuel materials.
+	 *
+	 * @return the map of fuel power provided by fuel materials
+	 */
+	public Map<Material, Double> getFuelPower() {
+		return fuelPower;
+	}
+
+	/**
 	 * Loads the configuration.
 	 */
 	public void load() {
@@ -151,6 +183,18 @@ public class CyberConfig {
 		this.naturalDecay = config.getDouble("naturalDecay", CyberConfig.DEFAULT_NATURAL_DECAY);
 		this.naturalDecayInterval = config.getLong("naturalDecayInterval", CyberConfig.DEFAULT_NATURAL_DECAY_INTERVAL);
 		this.chargingInterval = config.getLong("chargingInterval", CyberConfig.DEFAULT_CHARGING_INTERVAL);
+		if (config.isConfigurationSection("fuelPower")) {
+			this.fuelPower.clear();
+			final ConfigurationSection fuelPowerSection = config.getConfigurationSection("fuelPower");
+			for (final String key : fuelPowerSection.getKeys(false)) {
+				final Material m = Material.matchMaterial(key);
+				if (m == null) {
+					LOG.warning("Unknown materiel '" + key + "', ignored!");
+				} else {
+					this.fuelPower.put(m, fuelPowerSection.getDouble(key, 1D));
+				}
+			}
+		}
 	}
 
 	/**
@@ -179,9 +223,14 @@ public class CyberConfig {
 		// TODO Documented configuration
 		final StringBuilder builder = new StringBuilder();
 		builder.append("initialPower: ").append(this.initialPower).append("\n\n");
-		builder.append("naturalDecay: ").append(this.naturalDecay).append("\n");
+		builder.append("naturalDecay: ").append(this.naturalDecay).append('\n');
 		builder.append("naturalDecayInterval: ").append(this.naturalDecayInterval).append("\n\n");
 		builder.append("chargingInterval: ").append(this.chargingInterval).append("\n\n");
+		builder.append("fuelPower:\n");
+		for (final Map.Entry<Material, Double> e : this.fuelPower.entrySet()) {
+			builder.append("  ").append(e.getKey().toString()).append(": ").append(e.getValue().toString()).append('\n');
+		}
+		builder.append('\n');
 		return builder.toString();
 	}
 
