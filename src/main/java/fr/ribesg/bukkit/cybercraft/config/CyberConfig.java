@@ -73,10 +73,10 @@ public class CyberConfig extends AbstractConfig {
 	/**
 	 * Builds a CyberConfig.
 	 *
-	 * @param plugin the plugin
+	 * @param instance the plugin
 	 */
-	public CyberConfig(final CyberCraft plugin) {
-		super(plugin, "config.yml");
+	public CyberConfig(final CyberCraft instance) {
+		super(instance, "config.yml");
 		this.initialPower = CyberConfig.DEFAULT_INITIAL_POWER;
 		this.naturalDecay = CyberConfig.DEFAULT_NATURAL_DECAY;
 		this.naturalDecayInterval = CyberConfig.DEFAULT_NATURAL_DECAY_INTERVAL;

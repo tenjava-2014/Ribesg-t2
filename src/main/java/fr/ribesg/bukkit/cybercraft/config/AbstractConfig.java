@@ -21,6 +21,11 @@ public abstract class AbstractConfig {
 	private static final Charset CHARSET = StandardCharsets.UTF_8;
 
 	/**
+	 * The plugin instance
+	 */
+	protected final CyberCraft plugin;
+
+	/**
 	 * Configuration file path.
 	 */
 	protected final Path configPath;
@@ -28,10 +33,12 @@ public abstract class AbstractConfig {
 	/**
 	 * Builds a CyberConfig.
 	 *
-	 * @param plugin the plugin
+	 * @param instance the plugin instance
+	 * @param fileName the file name
 	 */
-	protected AbstractConfig(final CyberCraft plugin, final String fileName) {
-		this.configPath = Paths.get(plugin.getDataFolder().getAbsolutePath(), fileName);
+	protected AbstractConfig(final CyberCraft instance, final String fileName) {
+		this.plugin = instance;
+		this.configPath = Paths.get(this.plugin.getDataFolder().getAbsolutePath(), fileName);
 	}
 
 	/**
