@@ -146,22 +146,33 @@ public class ChargingStation {
 					break;
 				}
 			}
+			final Inventory theInv;
 			if (m == null) {
-				return false;
-			} else {
-				final int index = inv.first(m);
-				ItemStack is = inv.getItem(index);
-				is.setAmount(is.getAmount() - 1);
-				if (is.getAmount() == 0) {
-					is = null;
+				theInv = ((Dispenser) this.baseLocation.toBukkit().getBlock().getState()).getInventory();
+				for (final ItemStack is : inv) {
+					if (is != null && fuelPower.containsKey(is.getType())) {
+						m = is.getType();
+						break;
+					}
 				}
-				inv.setItem(index, is);
-				final double power = fuelPower.get(m);
-				player.recharge(power);
-				this.powerLevel -= power;
-				this.updateSigns();
-				return true;
+				if (m == null) {
+					return false;
+				}
+			} else {
+				theInv = inv;
 			}
+			final int index = theInv.first(m);
+			ItemStack is = theInv.getItem(index);
+			is.setAmount(is.getAmount() - 1);
+			if (is.getAmount() == 0) {
+				is = null;
+			}
+			theInv.setItem(index, is);
+			final double power = fuelPower.get(m);
+			player.recharge(power);
+			this.powerLevel -= power;
+			this.updateSigns();
+			return true;
 		}
 		return false;
 	}
