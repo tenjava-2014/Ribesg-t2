@@ -1,4 +1,5 @@
-package fr.ribesg.bukkit.cybercraft;
+package fr.ribesg.bukkit.cybercraft.config;
+import fr.ribesg.bukkit.cybercraft.CyberCraft;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -30,12 +31,42 @@ public class CyberConfig {
 	/**
 	 * Default value for {@link #initialPower}.
 	 */
-	private static final long DEFAULT_INITIAL_POWER = 1_000;
+	private static final double DEFAULT_INITIAL_POWER = 1_000D;
 
 	/**
-	 * Initial power for new CyberPlayers and for CyberPlayer respawn.
+	 * Initial power for new CyberPlayers and for respawning CyberPlayers.
 	 */
-	private long initialPower;
+	private double initialPower;
+
+	/**
+	 * Default value for {@link #naturalDecay}
+	 */
+	private static final double DEFAULT_NATURAL_DECAY = 1D;
+
+	/**
+	 * Amount of power naturally lost with time
+	 */
+	private double naturalDecay;
+
+	/**
+	 * Default value for {@link #naturalDecayInterval}
+	 */
+	private static final long DEFAULT_NATURAL_DECAY_INTERVAL = 5L;
+
+	/**
+	 * Amount of ticks between each natural power loss
+	 */
+	private long naturalDecayInterval;
+
+	/**
+	 * Default value for {@link #chargingInterval}
+	 */
+	private static final long DEFAULT_CHARGING_INTERVAL = 20L;
+
+	/**
+	 * Amount of ticks between each charging action
+	 */
+	private long chargingInterval;
 
 	/**
 	 * Builds a CyberConfig.
@@ -45,6 +76,47 @@ public class CyberConfig {
 	public CyberConfig(final CyberCraft plugin) {
 		this.configPath = Paths.get(plugin.getDataFolder().getAbsolutePath(), "config.yml");
 		this.initialPower = CyberConfig.DEFAULT_INITIAL_POWER;
+		this.naturalDecay = CyberConfig.DEFAULT_NATURAL_DECAY;
+		this.naturalDecayInterval = CyberConfig.DEFAULT_NATURAL_DECAY_INTERVAL;
+		this.chargingInterval = CyberConfig.DEFAULT_CHARGING_INTERVAL;
+	}
+
+	/**
+	 * Gets the initial power for new CyberPlayers and for respawning
+	 * CyberPlayers.
+	 *
+	 * @return the initial power for new CyberPlayers and for respawning
+	 * CyberPlayers
+	 */
+	public double getInitialPower() {
+		return this.initialPower;
+	}
+
+	/**
+	 * Gets the amount of power naturally lost with time.
+	 *
+	 * @return the amount of power naturally lost with time
+	 */
+	public double getNaturalDecay() {
+		return this.naturalDecay;
+	}
+
+	/**
+	 * Gets the amount of ticks between each natural power loss.
+	 *
+	 * @return the amount of ticks between each natural power loss
+	 */
+	public long getNaturalDecayInterval() {
+		return this.naturalDecayInterval;
+	}
+
+	/**
+	 * Gets the amount of ticks between each charging action.
+	 *
+	 * @return the amount of ticks between each charging action
+	 */
+	public long getChargingInterval() {
+		return chargingInterval;
 	}
 
 	/**
@@ -75,7 +147,10 @@ public class CyberConfig {
 	 * @param config the loaded configuration
 	 */
 	private void read(final YamlConfiguration config) {
-		this.initialPower = config.getLong("initialPower", CyberConfig.DEFAULT_INITIAL_POWER);
+		this.initialPower = config.getDouble("initialPower", CyberConfig.DEFAULT_INITIAL_POWER);
+		this.naturalDecay = config.getDouble("naturalDecay", CyberConfig.DEFAULT_NATURAL_DECAY);
+		this.naturalDecayInterval = config.getLong("naturalDecayInterval", CyberConfig.DEFAULT_NATURAL_DECAY_INTERVAL);
+		this.chargingInterval = config.getLong("chargingInterval", CyberConfig.DEFAULT_CHARGING_INTERVAL);
 	}
 
 	/**
@@ -102,7 +177,12 @@ public class CyberConfig {
 	 */
 	private String write() {
 		// TODO Documented configuration
-		return "initialPower: " + this.initialPower;
+		final StringBuilder builder = new StringBuilder();
+		builder.append("initialPower: ").append(this.initialPower).append("\n\n");
+		builder.append("naturalDecay: ").append(this.naturalDecay).append("\n");
+		builder.append("naturalDecayInterval: ").append(this.naturalDecayInterval).append("\n\n");
+		builder.append("chargingInterval: ").append(this.chargingInterval).append("\n\n");
+		return builder.toString();
 	}
 
 	/**
