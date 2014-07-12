@@ -1,10 +1,15 @@
 package fr.ribesg.bukkit.cybercraft.cyber;
+import fr.ribesg.bukkit.cybercraft.CyberCraft;
 import fr.ribesg.bukkit.cybercraft.util.BlockLocation;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.material.Dispenser;
+import org.bukkit.block.Dispenser;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.Map;
 
 /**
  * Represents a Charging Station.
@@ -20,14 +25,19 @@ public class ChargingStation {
 	 */
 	public static boolean isValid(final Location baseLocation) {
 		final Block baseBlock = baseLocation.getBlock();
-		final Block topBlock = baseLocation.add(0, 3, 0).getBlock();
+		final Block topBlock = baseLocation.clone().add(0, 3, 0).getBlock();
 		return baseBlock.getType() == Material.DISPENSER &&
-		       ((Dispenser) baseBlock.getState().getData()).getFacing() == BlockFace.UP &&
+		       ((org.bukkit.material.Dispenser) baseBlock.getState().getData()).getFacing() == BlockFace.UP &&
 		       topBlock.getType() == Material.DISPENSER &&
-		       ((Dispenser) topBlock.getState().getData()).getFacing() == BlockFace.DOWN &&
+		       ((org.bukkit.material.Dispenser) topBlock.getState().getData()).getFacing() == BlockFace.DOWN &&
 		       baseBlock.getRelative(BlockFace.UP).getType() == Material.AIR &&
 		       topBlock.getRelative(BlockFace.DOWN).getType() == Material.AIR;
 	}
+
+	/**
+	 * The plugin instance
+	 */
+	private final CyberCraft plugin;
 
 	/**
 	 * The Charging Station's base Location
@@ -49,13 +59,14 @@ public class ChargingStation {
 	 *
 	 * @param baseLocation the base Location of the Charging Station
 	 */
-	public ChargingStation(final Location baseLocation) {
+	public ChargingStation(final CyberCraft instance, final Location baseLocation) {
 		if (!ChargingStation.isValid(baseLocation)) {
 			throw new IllegalArgumentException("Invalid Charging Station at " + baseLocation.toString());
 		}
+		this.plugin = instance;
 		this.baseLocation = new BlockLocation(baseLocation);
 		this.topLocation = new BlockLocation(baseLocation.add(0, 3, 0));
-		this.powerLevel = 0d;
+		this.updatePowerLevel();
 	}
 
 	/**
@@ -71,7 +82,25 @@ public class ChargingStation {
 	 * Updates the power level of this Charging Station base on its dispensers content.
 	 */
 	public void updatePowerLevel() {
-		// TODO
+		final Map<Material, Double> fuelPower = this.plugin.getPluginConfig().getFuelPower();
+
+		double power = 0D;
+
+		final Inventory inv1 = ((Dispenser) this.topLocation.toBukkit().getBlock().getState()).getInventory();
+		for (final ItemStack is : inv1) {
+			if (is != null && fuelPower.containsKey(is.getType())) {
+				power += is.getAmount() * fuelPower.get(is.getType());
+			}
+		}
+
+		final Inventory inv2 = ((Dispenser) this.baseLocation.toBukkit().getBlock().getState()).getInventory();
+		for (final ItemStack is : inv2) {
+			if (is != null && fuelPower.containsKey(is.getType())) {
+				power += is.getAmount() * fuelPower.get(is.getType());
+			}
+		}
+
+		this.powerLevel = power;
 	}
 
 	/**
@@ -83,7 +112,28 @@ public class ChargingStation {
 	 * otherwise
 	 */
 	public boolean charge(final CyberPlayer player) {
-		return false; // TODO
+		final Inventory inv = ((Dispenser) this.topLocation.toBukkit().getBlock().getState()).getInventory();
+		final Map<Material, Double> fuelPower = this.plugin.getPluginConfig().getFuelPower();
+		Material m = null;
+		for (final ItemStack is : inv) {
+			if (is != null && fuelPower.containsKey(is.getType())) {
+				m = is.getType();
+				break;
+			}
+		}
+		if (m == null) {
+			return false;
+		} else {
+			final int index = inv.first(m);
+			ItemStack is = inv.getItem(index);
+			is.setAmount(is.getAmount() - 1);
+			if (is.getAmount() == 0) {
+				is = null;
+			}
+			inv.setItem(index, is);
+			player.recharge(fuelPower.get(m));
+			return true;
+		}
 	}
 
 	/**

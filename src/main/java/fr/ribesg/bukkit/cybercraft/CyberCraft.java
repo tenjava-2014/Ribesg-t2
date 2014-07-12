@@ -97,7 +97,7 @@ public class CyberCraft extends JavaPlugin {
 	// ############################### //
 
 	public void createChargingStation(final Location baseLocation) {
-		final ChargingStation station = new ChargingStation(baseLocation);
+		final ChargingStation station = new ChargingStation(this, baseLocation);
 		this.stations.put(station.getBaseLocation(), station);
 		this.stations.put(station.getTopLocation(), station);
 	}

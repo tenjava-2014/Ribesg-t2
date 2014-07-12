@@ -40,13 +40,16 @@ public class ChargingTask extends BukkitRunnable {
 		for (final ChargingStation station : this.plugin.getStations().values()) {
 			final Location a = station.getBaseLocation().toBukkit().add(0.5, 1.5, 0.5);
 			final World w = a.getWorld();
-			final Location b = a.add(0, 1, 0);
+			final Location b = a.clone().add(0, 0.5, 0);
+			final Location c = b.clone().add(0, 0.5, 0);
 			if (stations.contains(station)) {
 				w.playEffect(a, Effect.MOBSPAWNER_FLAMES, 4);
 				w.playEffect(b, Effect.MOBSPAWNER_FLAMES, 4);
+				w.playEffect(c, Effect.MOBSPAWNER_FLAMES, 4);
 			} else {
 				w.playEffect(a, Effect.SMOKE, 4);
 				w.playEffect(b, Effect.SMOKE, 4);
+				w.playEffect(c, Effect.SMOKE, 4);
 			}
 		}
 	}

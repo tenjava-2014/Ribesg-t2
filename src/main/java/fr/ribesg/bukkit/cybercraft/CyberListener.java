@@ -45,11 +45,13 @@ public class CyberListener implements Listener {
 	public void onPlayerPlaceBlock(final BlockPlaceEvent event) {
 		final Block block = event.getBlockPlaced();
 		if (block.getType() == Material.DISPENSER) {
-			final Location loc = block.getLocation();
-			if (ChargingStation.isValid(loc)) {
-				this.plugin.createChargingStation(loc);
-			} else if (ChargingStation.isValid(loc.subtract(0, 3, 0))) {
-				this.plugin.createChargingStation(loc.subtract(0, 3, 0));
+			final Location l = block.getLocation();
+			for (int i = -3; i <= 3; i += 3) {
+				final Location loc = l.clone().add(0, i, 0);
+				if (ChargingStation.isValid(loc)) {
+					CyberListener.this.plugin.createChargingStation(loc);
+					break;
+				}
 			}
 		}
 	}
