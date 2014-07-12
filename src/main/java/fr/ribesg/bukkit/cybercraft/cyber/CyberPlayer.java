@@ -124,7 +124,7 @@ public class CyberPlayer {
 		// Update time left
 		final long timeDiff = System.currentTimeMillis() - this.previousPowerTimestamp;
 		final double diff = this.previousPower - this.power;
-		if (forceUpdate || timeDiff > 2500) {
+		if (forceUpdate || timeDiff > 500) {
 			final String oldTimeLeftName = this.timeLeftName;
 			if (diff > 0) {
 
