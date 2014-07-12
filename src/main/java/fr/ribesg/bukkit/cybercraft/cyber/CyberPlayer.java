@@ -184,6 +184,15 @@ public class CyberPlayer {
 	}
 
 	/**
+	 * Sets the Player's power level.
+	 *
+	 * @param power the new Player power level
+	 */
+	public void setPower(double power) {
+		this.power = power;
+	}
+
+	/**
 	 * Gets the Player's scoreboard.
 	 *
 	 * @return the Player's scoreboard

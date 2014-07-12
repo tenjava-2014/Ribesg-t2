@@ -1,3 +1,10 @@
 name: CyberCraft
 main: fr.ribesg.bukkit.cybercraft.CyberCraft
 version: '${project.version}'
+
+commands:
+  setpower:
+    description: Set the power level of a Cyber Player
+    permission: cybercraft.admin
+    usage: |
+      /<command> [name,...] [...] <value>

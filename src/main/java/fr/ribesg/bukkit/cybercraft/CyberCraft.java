@@ -48,6 +48,7 @@ public class CyberCraft extends JavaPlugin {
 
 		// We don't need to store instances
 		new CyberListener(this);
+		new CyberExecutor(this);
 		new DecayTask(this);
 		new ChargingTask(this);
 		new AdminScoreboardUpdateTask(this);
