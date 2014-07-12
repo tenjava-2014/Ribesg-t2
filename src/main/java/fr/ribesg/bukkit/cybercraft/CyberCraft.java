@@ -3,6 +3,7 @@ package fr.ribesg.bukkit.cybercraft;
 import fr.ribesg.bukkit.cybercraft.config.CyberConfig;
 import fr.ribesg.bukkit.cybercraft.cyber.ChargingStation;
 import fr.ribesg.bukkit.cybercraft.cyber.CyberPlayer;
+import fr.ribesg.bukkit.cybercraft.task.AdminScoreboardUpdateTask;
 import fr.ribesg.bukkit.cybercraft.task.ChargingTask;
 import fr.ribesg.bukkit.cybercraft.task.DecayTask;
 import fr.ribesg.bukkit.cybercraft.util.BlockLocation;
@@ -24,9 +25,10 @@ public class CyberCraft extends JavaPlugin {
 
 	private CyberConfig config;
 
-	private CyberListener listener;
-	private DecayTask     decayTask;
-	private ChargingTask  chargingTask;
+	private CyberListener             listener;
+	private DecayTask                 decayTask;
+	private ChargingTask              chargingTask;
+	private AdminScoreboardUpdateTask adminScoreboardUpdateTask;
 
 	private Map<UUID, CyberPlayer>              players;
 	private Map<BlockLocation, ChargingStation> stations;
@@ -50,6 +52,7 @@ public class CyberCraft extends JavaPlugin {
 		this.listener = new CyberListener(this);
 		this.decayTask = new DecayTask(this);
 		this.chargingTask = new ChargingTask(this);
+		this.adminScoreboardUpdateTask = new AdminScoreboardUpdateTask(this);
 
 		this.players = new HashMap<>();
 		this.stations = new HashMap<>();

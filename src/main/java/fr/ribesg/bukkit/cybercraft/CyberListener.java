@@ -5,13 +5,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Dispenser;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 
 /**
  * CyberCraft's Listener.
@@ -63,6 +69,41 @@ public class CyberListener implements Listener {
 			final BlockLocation loc = new BlockLocation(block.getLocation());
 			if (this.plugin.isChargingStationLocation(loc)) {
 				this.plugin.destroyChargingStation(this.plugin.getChargingStation(loc));
+			}
+		}
+	}
+
+	@EventHandler
+	public void onPlayerCloseInventory(final InventoryCloseEvent event) {
+		final Inventory inv = event.getInventory();
+		final InventoryHolder holder = inv.getHolder();
+		if (holder instanceof Dispenser) {
+			final Dispenser dispenser = (Dispenser) holder;
+			final BlockLocation blockLocation = new BlockLocation(dispenser.getLocation());
+			final ChargingStation station = this.plugin.getChargingStation(blockLocation);
+			if (station != null) {
+				station.updatePowerLevel();
+			}
+		}
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public void onSignChange(final SignChangeEvent event) {
+		if (event.getLine(0).equalsIgnoreCase("[Power]")) {
+			final Block sign = event.getBlock();
+			for (final BlockFace bf : new BlockFace[] {
+					BlockFace.NORTH,
+					BlockFace.SOUTH,
+					BlockFace.EAST,
+					BlockFace.WEST
+			}) {
+				final BlockLocation loc = new BlockLocation(sign.getRelative(bf).getLocation());
+				final ChargingStation station = this.plugin.getChargingStation(loc);
+				if (station != null) {
+					System.out.println("Attaching a sign");
+					station.attachSign(new BlockLocation(sign.getLocation()));
+					break;
+				}
 			}
 		}
 	}

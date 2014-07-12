@@ -1,20 +1,36 @@
 package fr.ribesg.bukkit.cybercraft.cyber;
 import fr.ribesg.bukkit.cybercraft.CyberCraft;
 import fr.ribesg.bukkit.cybercraft.util.BlockLocation;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Dispenser;
+import org.bukkit.block.Sign;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Represents a Charging Station.
  */
 public class ChargingStation {
+
+	private static final DecimalFormat FORMAT;
+
+	static {
+		final DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+		symbols.setGroupingSeparator(' ');
+		FORMAT = new DecimalFormat("###,###", symbols);
+	}
 
 	/**
 	 * Checks if a Charging Station is valid, based on its base Location.
@@ -55,6 +71,11 @@ public class ChargingStation {
 	private double powerLevel;
 
 	/**
+	 * Signs attached to this Charging Station
+	 */
+	private final Set<BlockLocation> attachedSigns;
+
+	/**
 	 * Builds a Charging Station from its base Location.
 	 *
 	 * @param baseLocation the base Location of the Charging Station
@@ -66,16 +87,8 @@ public class ChargingStation {
 		this.plugin = instance;
 		this.baseLocation = new BlockLocation(baseLocation);
 		this.topLocation = new BlockLocation(baseLocation.add(0, 3, 0));
+		this.attachedSigns = new HashSet<>();
 		this.updatePowerLevel();
-	}
-
-	/**
-	 * Gets the power level available in this Charging Station.
-	 *
-	 * @return the power level available in this Charging Station
-	 */
-	public double getPowerLevel() {
-		return this.powerLevel;
 	}
 
 	/**
@@ -101,6 +114,8 @@ public class ChargingStation {
 		}
 
 		this.powerLevel = power;
+
+		this.updateSigns();
 	}
 
 	/**
@@ -112,27 +127,65 @@ public class ChargingStation {
 	 * otherwise
 	 */
 	public boolean charge(final CyberPlayer player) {
-		final Inventory inv = ((Dispenser) this.topLocation.toBukkit().getBlock().getState()).getInventory();
-		final Map<Material, Double> fuelPower = this.plugin.getPluginConfig().getFuelPower();
-		Material m = null;
-		for (final ItemStack is : inv) {
-			if (is != null && fuelPower.containsKey(is.getType())) {
-				m = is.getType();
-				break;
+		if (this.powerLevel > 0) {
+			final Inventory inv = ((Dispenser) this.topLocation.toBukkit().getBlock().getState()).getInventory();
+			final Map<Material, Double> fuelPower = this.plugin.getPluginConfig().getFuelPower();
+			Material m = null;
+			for (final ItemStack is : inv) {
+				if (is != null && fuelPower.containsKey(is.getType())) {
+					m = is.getType();
+					break;
+				}
+			}
+			if (m == null) {
+				return false;
+			} else {
+				final int index = inv.first(m);
+				ItemStack is = inv.getItem(index);
+				is.setAmount(is.getAmount() - 1);
+				if (is.getAmount() == 0) {
+					is = null;
+				}
+				inv.setItem(index, is);
+				final double power = fuelPower.get(m);
+				player.recharge(power);
+				this.powerLevel -= power;
+				this.updateSigns();
+				return true;
 			}
 		}
-		if (m == null) {
-			return false;
-		} else {
-			final int index = inv.first(m);
-			ItemStack is = inv.getItem(index);
-			is.setAmount(is.getAmount() - 1);
-			if (is.getAmount() == 0) {
-				is = null;
+		return false;
+	}
+
+	/**
+	 * Attaches a new Sign to this Charging Station.
+	 *
+	 * @param loc the new Sign location
+	 */
+	public void attachSign(final BlockLocation loc) {
+		this.attachedSigns.add(loc);
+		Bukkit.getScheduler().runTaskLater(this.plugin, this::updateSigns, 5L);
+	}
+
+	/**
+	 * Updates the signs attached to this Charging Station.
+	 */
+	public void updateSigns() {
+		System.out.println("Updating " + this.attachedSigns.size() + " signs");
+		final Iterator<BlockLocation> it = this.attachedSigns.iterator();
+		while (it.hasNext()) {
+			final BlockLocation loc = it.next();
+			final Block b = Bukkit.getWorld(loc.getWorldName()).getBlockAt(loc.getX(), loc.getY(), loc.getZ());
+			if (b.getType() != Material.SIGN_POST && b.getType() != Material.WALL_SIGN) {
+				it.remove();
+				System.out.println("Removed a sign");
+			} else {
+				final Sign sign = (Sign) b.getState();
+				sign.setLine(0, "" + ChatColor.BLACK + '[' + ChatColor.GREEN + "Power" + ChatColor.BLACK + ']');
+				sign.setLine(2, FORMAT.format((int) this.powerLevel));
+				sign.update(true);
+				System.out.println("Updated a sign");
 			}
-			inv.setItem(index, is);
-			player.recharge(fuelPower.get(m));
-			return true;
 		}
 	}
 
@@ -152,5 +205,23 @@ public class ChargingStation {
 	 */
 	public BlockLocation getTopLocation() {
 		return this.topLocation;
+	}
+
+	/**
+	 * Gets the power level available in this Charging Station.
+	 *
+	 * @return the power level available in this Charging Station
+	 */
+	public double getPowerLevel() {
+		return this.powerLevel;
+	}
+
+	/**
+	 * Gets all signs attached to this Charging Station.
+	 *
+	 * @return all signs attached to this Charging Station
+	 */
+	public Set<BlockLocation> getAttachedSigns() {
+		return attachedSigns;
 	}
 }

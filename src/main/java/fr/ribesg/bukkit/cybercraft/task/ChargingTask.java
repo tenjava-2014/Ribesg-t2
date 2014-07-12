@@ -5,6 +5,7 @@ import fr.ribesg.bukkit.cybercraft.util.BlockLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -45,10 +46,12 @@ public class ChargingTask extends BukkitRunnable {
 			if (stations.contains(station)) {
 				w.playEffect(a, Effect.MOBSPAWNER_FLAMES, 4);
 				w.playEffect(b, Effect.MOBSPAWNER_FLAMES, 4);
+				w.playSound(b, Sound.ENDERDRAGON_HIT, 1f, 0.25f);
 				w.playEffect(c, Effect.MOBSPAWNER_FLAMES, 4);
 			} else {
 				w.playEffect(a, Effect.SMOKE, 4);
 				w.playEffect(b, Effect.SMOKE, 4);
+				w.playSound(b, Sound.CREEPER_HISS, 0.5f, 2f);
 				w.playEffect(c, Effect.SMOKE, 4);
 			}
 		}
