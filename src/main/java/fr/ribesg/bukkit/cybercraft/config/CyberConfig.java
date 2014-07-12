@@ -292,7 +292,6 @@ public class CyberConfig extends AbstractConfig {
 	 */
 	@Override
 	protected String write() {
-		// TODO Documented configuration
 		final StringBuilder builder = new StringBuilder();
 		builder.append("# Initial power given to first joining players and respawning players\n");
 		builder.append("initialPower: ").append(this.initialPower).append("\n\n");

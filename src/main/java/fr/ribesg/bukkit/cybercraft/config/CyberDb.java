@@ -76,8 +76,9 @@ public class CyberDb extends AbstractConfig {
 	 */
 	@Override
 	protected String write() {
-		// TODO Documented configuration
 		final StringBuilder builder = new StringBuilder();
+
+		builder.append("# Please don't touch this file, or very carefully!\n\n");
 
 		builder.append("chargingStations:\n");
 		int i = 0;

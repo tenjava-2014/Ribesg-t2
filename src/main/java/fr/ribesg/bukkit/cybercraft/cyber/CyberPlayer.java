@@ -105,17 +105,16 @@ public class CyberPlayer {
 			this.power -= amount;
 			if (this.power < 0) {
 				this.power = 0;
-				noMorePower();
 			}
 			this.updateScoreboard(false);
+		} else {
+			final Player player = Bukkit.getPlayer(this.playerId);
+			if (player.getFoodLevel() > 0) {
+				player.setFoodLevel(player.getFoodLevel() - 1);
+			} else {
+				player.setHealth(player.getHealth() - (player.getMaxHealth() / 20D));
+			}
 		}
-	}
-
-	/**
-	 * Handles mostly-inevitable death. Called when the Player no longer has power.
-	 */
-	public void noMorePower() {
-		// TODO Handle Player slow death
 	}
 
 	private void updateScoreboard(final boolean forceUpdate) {

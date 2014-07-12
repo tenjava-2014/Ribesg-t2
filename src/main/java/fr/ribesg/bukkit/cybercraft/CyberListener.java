@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -36,7 +37,6 @@ public class CyberListener implements Listener {
 		final Player player = event.getPlayer();
 		if (!this.plugin.isRegistered(player)) {
 			this.plugin.register(player);
-			// TODO Send some message explaining wth is happening
 		} else {
 			this.plugin.link(player);
 		}
@@ -106,5 +106,10 @@ public class CyberListener implements Listener {
 				}
 			}
 		}
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public void onFoodLevelChange(final FoodLevelChangeEvent event) {
+		event.setCancelled(true);
 	}
 }
