@@ -14,8 +14,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -126,5 +128,16 @@ public class CyberListener implements Listener {
 	@EventHandler
 	public void onPlayerRespawn(final PlayerRespawnEvent event) {
 		this.plugin.getPlayers().get(event.getPlayer().getUniqueId()).setPower(this.plugin.getPluginConfig().getInitialPower());
+	}
+
+	@EventHandler
+	public void onPlayerDeath(final PlayerDeathEvent event) {
+		if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent) {
+			final EntityDamageByEntityEvent entityEvent = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
+			if (entityEvent.getDamager().getType() == EntityType.PLAYER) {
+				final Player damager = (Player) entityEvent.getDamager();
+				this.plugin.getPlayers().get(damager.getUniqueId()).recharge(this.plugin.getPlayers().get(event.getEntity().getUniqueId()).getPower() / 2);
+			}
+		}
 	}
 }
