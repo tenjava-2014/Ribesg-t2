@@ -1,5 +1,4 @@
 package fr.ribesg.bukkit.cybercraft.cyber;
-import fr.ribesg.bukkit.cybercraft.CyberCraft;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -34,6 +33,26 @@ public class CyberPlayer {
 	private final Scoreboard scoreboard;
 
 	/**
+	 * Last saved power state. Used for Time Left entry.
+	 */
+	private double previousPower;
+
+	/**
+	 * Last saved power state timestamp. Used for Time Left entry.
+	 */
+	private long previousPowerTimestamp;
+
+	/**
+	 * Time left, in seconds, minutes or hours. Used for Time Left entry.
+	 */
+	private long timeLeft;
+
+	/**
+	 * Time left entry current name. Used for Time Left entry.
+	 */
+	private String timeLeftName;
+
+	/**
 	 * Builds a CyberPlayer from a Player and an initial Power.
 	 *
 	 * @param player       the player
@@ -55,9 +74,15 @@ public class CyberPlayer {
 		this.playerName = name;
 		this.power = power;
 		this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-		final Objective powerObj = scoreboard.registerNewObjective(CyberCraft.POWER_OBJECTIVE, "dummy");
+		this.previousPower = power;
+		this.previousPowerTimestamp = System.currentTimeMillis();
+		this.timeLeft = 0;
+		this.timeLeftName = "Time Left (s):";
+
+		final Objective powerObj = scoreboard.registerNewObjective(name, "dummy");
 		powerObj.setDisplaySlot(DisplaySlot.SIDEBAR);
-		powerObj.getScore(name).setScore((int) power);
+		powerObj.getScore("Power Left:").setScore((int) power);
+		powerObj.getScore(this.timeLeftName).setScore((int) this.timeLeft);
 	}
 
 	/**
@@ -67,7 +92,7 @@ public class CyberPlayer {
 	 */
 	public void recharge(final double amount) {
 		this.power += amount;
-		this.updateScoreboard();
+		this.updateScoreboard(true);
 	}
 
 	/**
@@ -82,7 +107,7 @@ public class CyberPlayer {
 				this.power = 0;
 				noMorePower();
 			}
-			this.updateScoreboard();
+			this.updateScoreboard(false);
 		}
 	}
 
@@ -93,8 +118,42 @@ public class CyberPlayer {
 		// TODO Handle Player slow death
 	}
 
-	private void updateScoreboard() {
-		this.scoreboard.getObjective(CyberCraft.POWER_OBJECTIVE).getScore(this.playerName).setScore((int) this.power);
+	private void updateScoreboard(final boolean forceUpdate) {
+		// Handle power left
+		this.scoreboard.getObjective(this.playerName).getScore("Power Left:").setScore((int) this.power);
+
+		// Update time left
+		final long timeDiff = System.currentTimeMillis() - this.previousPowerTimestamp;
+		final double diff = this.previousPower - this.power;
+		if (forceUpdate || timeDiff > 2500) {
+			final String oldTimeLeftName = this.timeLeftName;
+			if (diff > 0) {
+
+				// Compute new time left
+				this.timeLeft = (long) (this.power / diff * timeDiff / 1000D);
+
+				// Get new time left value
+				final int value;
+				if (this.timeLeft < 300) {
+					this.timeLeftName = "Time Left (s):";
+					value = (int) this.timeLeft;
+				} else if (this.timeLeft < 60 * 120) {
+					this.timeLeftName = "Time left (m):";
+					value = (int) (this.timeLeft / 60);
+				} else {
+					this.timeLeftName = "Time Left (h):";
+					value = (int) (this.timeLeft / (60 * 60));
+				}
+
+				// Apply new time left value
+				if (!oldTimeLeftName.equals(this.timeLeftName)) {
+					this.scoreboard.resetScores(oldTimeLeftName);
+				}
+				this.scoreboard.getObjective(this.playerName).getScore(this.timeLeftName).setScore(value);
+			}
+			this.previousPower = this.power;
+			this.previousPowerTimestamp = System.currentTimeMillis();
+		}
 	}
 
 	/**
