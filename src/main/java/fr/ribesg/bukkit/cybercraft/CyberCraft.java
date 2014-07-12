@@ -4,13 +4,20 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class CyberCraft extends JavaPlugin {
 
+	private CyberConfig config;
+
 	@Override
 	public void onDisable() {
-		// TODO
+		// TODO Something, maybe. I don't know.
 	}
 
 	@Override
 	public void onEnable() {
-		// TODO
+		this.config = new CyberConfig(this);
+		this.config.load();
+	}
+
+	public CyberConfig getPluginConfig() {
+		return config;
 	}
 }
