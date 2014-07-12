@@ -1,3 +1,3 @@
-name: Ribesg-t2
-main: com.tenjava.entries.Ribesg.t2.TenJava
+name: CyberCraft
+main: fr.ribesg.bukkit.cybercraft.CyberCraft
 version: '${project.version}'
