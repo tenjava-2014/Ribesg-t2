@@ -19,6 +19,7 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
@@ -120,5 +121,10 @@ public class CyberListener implements Listener {
 		if (event.getEntityType() == EntityType.PLAYER) {
 			event.setCancelled(true);
 		}
+	}
+
+	@EventHandler
+	public void onPlayerRespawn(final PlayerRespawnEvent event) {
+		this.plugin.getPlayers().get(event.getPlayer().getUniqueId()).setPower(this.plugin.getPluginConfig().getInitialPower());
 	}
 }
