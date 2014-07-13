@@ -54,7 +54,7 @@ public class CyberExecutor implements CommandExecutor {
 					return true;
 				}
 			} else {
-				for (int i = 1; i < args.length - 1; i++) {
+				for (int i = 1; i < args.length; i++) {
 					for (final String name : args[i].split(",")) {
 						final Player player = Bukkit.getPlayer(name);
 						if (player == null) {
