@@ -59,6 +59,7 @@ public class CyberPerks implements Listener {
 			final CyberPlayer player = this.plugin.getPlayers().get(id);
 			player.discharge(this.plugin.getPluginConfig().getFlyPerkCost());
 		}), 15L, this.plugin.getPluginConfig().getFlyPerkInterval());
+		Bukkit.getPluginManager().registerEvents(this, this.plugin);
 	}
 
 	// ################# //

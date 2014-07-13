@@ -45,7 +45,7 @@ public abstract class AbstractConfig {
 	 * Loads the configuration.
 	 */
 	public void load() {
-		this.checkFile();
+		this.checkFile(false);
 
 		final YamlConfiguration config = new YamlConfiguration();
 		try {
@@ -74,7 +74,7 @@ public abstract class AbstractConfig {
 	 * Saves the configuration.
 	 */
 	public void save() {
-		this.checkFile();
+		this.checkFile(true);
 
 		final String configurationContent = this.write();
 
@@ -98,7 +98,7 @@ public abstract class AbstractConfig {
 	 * Checks that the configuration file and all parent folders exists.
 	 * Creates them if they don't.
 	 */
-	private void checkFile() {
+	private void checkFile(final boolean whileSaving) {
 		if (!Files.exists(this.configPath)) {
 			try {
 				if (!Files.exists(this.configPath.toFile().getParentFile().toPath())) {
@@ -107,6 +107,9 @@ public abstract class AbstractConfig {
 					}
 				}
 				Files.createFile(this.configPath);
+				if (!whileSaving) {
+					save();
+				}
 			} catch (final Throwable e) {
 				throw new RuntimeException("Problem in configuration handling", e);
 			}

@@ -29,28 +29,24 @@ Usage
 1. Install plugin
 2. Do things with it
 
-Idea
+Explanation
 ----
 
-Everyone is a Robot. Because of that, you need Energy to live.
+Everyone is a Robot. Everyone starts with a configurable amount of Power.
 * Your level of Energy is written in a Scoreboard
 * As an Admin, you see the level of Energy of everybody
 * Killing somebody steals 50% of its energy
 * You can recharge yourself using a fuel item on a recharging station
-* A recharging station is composed of 2 dispensers
+* A recharging station is composed of 2 dispensers, like this:
+  * D <-- Oriented downside
+  * A <-- This is air
+  * A <-- This is also air
+  * D <-- Oriented upside
 * You need to put fuel in one or both dispensers for the recharging station to be activated
-* Recharging station consumes 1 item every X ticks to recharge you
+* Recharging station consumes 1 item every 5 (configurable) ticks to recharge you
 * Recharging stations aren't personal
 * A sign placed on a recharging station can output the station content power
 * Fuel items are basically coal, but anything else can be (configurable)
-* When your power level reaches 0, your food level will lose one level per second until you die
-
-Optional bonus things I may not have the time to do
-* Fuel can be used for various things
-  * Night vision
-  * Fly
-  * Speed
-  * Power-ups (more attack, more defense)
-  * Etc.
-* Everything activated make your power level decrease faster
-* Portable charging device. Some item hard to craft.
+* When your power level reaches 0, your food level will lose one level per second, then your health will decrease by one per second until you die
+* There are perks you can use, they consume Power: Attack, Defense, Fly. Use the /perk command
+* Admin command /setpower allows you to modify anybody's power level
